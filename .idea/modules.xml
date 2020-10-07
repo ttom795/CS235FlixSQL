@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CS235FlixSkeleton.iml" filepath="$PROJECT_DIR$/.idea/CS235FlixSkeleton.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/COMPSCI-235.iml" filepath="$PROJECT_DIR$/.idea/COMPSCI-235.iml" />
     </modules>
   </component>
 </project>

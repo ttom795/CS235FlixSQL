@@ -2,9 +2,9 @@ from domainmodel.genre import Genre
 from domainmodel.actor import Actor
 from domainmodel.director import Director
 
-
 class Movie:
     def __init__(self, movieName, releaseDate):
+        self.id = 0
         self.releaseDate = releaseDate
         self.title = movieName.strip()
         self.description = ""
@@ -12,22 +12,23 @@ class Movie:
         self.actors = []
         self.genres = []
         self.runtime_minutes = 0
-        self.fulltitle = self.title + " " + str(releaseDate)
+        self.rating = 0
+        self.metascore = 0
 
     def __repr__(self):
         movieReturn = self.title
-        if str(self.title).isnumeric() or self.title == "":
+        if self.title == "":
             return "<Movie None>"
         return f'<Movie {self.title}, {self.releaseDate}>'
 
     def __eq__(self, toCompare):
-        return self.fulltitle == toCompare.fulltitle
+        return self.title + " " + str(self.releaseDate) == toCompare.title + " " + str(toCompare.releaseDate)
 
     def __lt__(self, toCompare):
-        return self.fulltitle < toCompare.fulltitle
+        return self.title + " " + str(self.releaseDate) < toCompare.title + " " + str(toCompare.releaseDate)
 
     def __hash__(self):
-        return hash(self.fulltitle)
+        return hash(self.title + " " + str(self.releaseDate))
 
     def add_actor(self, actorToAdd):
         self.actors.append(actorToAdd)

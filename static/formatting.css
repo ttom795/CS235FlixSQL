@@ -1,0 +1,68 @@
+/*body*/
+body {
+margin: auto;
+padding: 0;
+font-family: "Verdana";
+color: #FFFFFF;
+background: #000000;
+}
+/*header_bar*/
+header {
+height: 50px;
+background: linear-gradient(-45deg, #D30000, #700000, #D30000);
+background-size: 200%, 200%;
+position: relative;
+animation: change 4s ease-in-out infinite;
+}
+@keyframes change{
+0%{background-position: 0 50%}
+50%{background-position: 100% 50%}
+100%{background-position: 0% 50%}
+}
+/*other_css_stuff*/
+header h1 {
+margin: 0;
+font-size: 1.7em;
+color: #FFFFFF;
+text-transform: uppercase;
+padding: 8px;
+float: left;
+}
+h2 {
+color: #FFFFFF;
+text-transform: uppercase;
+}
+center_things{
+position: fixed;
+left: 50%;
+transform: translate(-50%, 0);
+text-align: center;
+}
+form{
+border-radius: 20px;
+background-color: rgba(70, 70, 70, 0.7);
+background-opacity: 50%;
+padding: 20px;
+}
+.container {
+width: 1200px;
+margin: 0 auto;
+}
+.menu {
+float: right;
+margin-top: 15px;
+}
+.menu li {
+display: inline-block;
+margin-right: 10px;
+border-radius: 20px;
+height: 100px;
+width: 125px;
+background: #000000;
+padding: 10px;
+text-align: center;
+}
+.menu li a {
+color: #FFFFFF;
+text-decoration: none;
+}

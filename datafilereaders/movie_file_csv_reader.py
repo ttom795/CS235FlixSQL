@@ -8,33 +8,27 @@ from domainmodel.director import Director
 class MovieFileCSVReader:
     def __init__(self, filename):
         self.__file_name = filename
-        self.dataset_of_movies = []
-        self.dataset_of_actors = []
-        self.dataset_of_directors = []
-        self.dataset_of_genres = []
+        self.movie_full_details = []
     def read_csv_file(self):
-        csv_file_contents = csv.DictReader(open(self.__file_name, mode='r', encoding='utf-8-sig'))
-        for individual_dictionary in csv_file_contents:
-            for key,value in individual_dictionary.items():
-                if key == "Title":
-                    temptitle = value
-                if key == "Actors":
-                    tempactorlist = value.split(",")
-                    for actor in tempactorlist:
-                        actor = Actor(actor.strip())
-                        if actor not in self.dataset_of_actors:
-                            self.dataset_of_actors.append(actor)
-                if key == "Genre":
-                    tempgenrelist = value.split(",")
-                    for genre in tempgenrelist:
-                        genre = Genre(genre.strip())
-                        if genre not in self.dataset_of_genres:
-                            self.dataset_of_genres.append(genre)
-                if key == "Director":
-                    tempdirectorlist = value.split(",")
-                    for director in tempdirectorlist:
-                        director = Director(director.strip())
-                        if director not in self.dataset_of_directors:
-                            self.dataset_of_directors.append(director)
-                if key == "Year":
-                    self.dataset_of_movies.append(Movie(temptitle, value))
+        csv_file_contents = csv.reader(open(self.__file_name, mode='r', encoding='utf-8-sig'))
+        boolean = True
+        for row in csv_file_contents:
+            if boolean:
+                boolean = False
+                continue
+            temp_movie = Movie("","")
+            temp_movie.id = int(row[0])-1
+            temp_movie.title = row[1]
+            genre_list = row[2].split(",")
+            genre_list = [Genre(genre) for genre in genre_list]
+            temp_movie.genres = genre_list
+            temp_movie.description = row[3]
+            temp_movie.director = Director(row[4])
+            actor_list = row[5].split(",")
+            actor_list = [Actor(actor) for actor in actor_list]
+            temp_movie.actors = actor_list
+            temp_movie.releaseDate = int(row[6])
+            temp_movie.runtime_minutes = int(row[7])
+            temp_movie.rating = float(row[8])
+            temp_movie.metascore = row[11]
+            self.movie_full_details.append(temp_movie)

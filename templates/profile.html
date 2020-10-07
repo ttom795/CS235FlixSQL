@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>CS235Flix</title>
+   </head>
+   <body>
+      {% extends "base_page.html" %}
+      {% block content %}
+      <h2>{{page_name}}</h2>
+      <p> Welcome to your profile, {{user.get("user_name")}}! </p>
+      {% if user.get("watched_movies")|length != 0 %}
+          <p> The last movie you watched was {{user.get("watched_movies"[-1])}}.</p>
+      {% endif %}
+      <p> You have watched {{user.get("watched_movies")|length}} movies. </p>
+      <p> You have spent {{user.get("time_spent_watching_movies_minutes")}} minutes watching movies. </p>
+      <p> You have posted {{user.get("reviews")|length}} reviews. </p>
+      {% endblock %}
+   </body>
+</html>
