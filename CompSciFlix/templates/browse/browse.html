@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block content %}
+<main id="main">
+  <h2 id="nav-header" style="position: relative; left: 5%;">
+    {% if 'username' in session %}
+      Hello, {{ session['username'] }}
+    {% endif %}
+  </h2>
+
+  <h2 id="sub-nav-header" style="position: fixed; left: 600px; top: 75px">Browse by genre</h2>
+    <div class="grid-container" style="grid-template-columns: repeat(5, 100px); position: absolute; left: 780px; top: 135px; transform: translateX(-50%)">
+    {% for tag in tag_urls %}
+        <button class="btn-general" onclick="location.href='{{ tag_urls[tag] }}'">{{ tag }}</button>
+    {% endfor %}
+    </div>
+  <form action='{{ url_for('browse_bp.search_movie') }}' method="POST" style="position: relative; left: 150px; top: 50px;">
+    <input name="search_term">
+    <select name="category" id="movies">
+        <option value="title">Title</option>
+        <option value="actor">Actor</option>
+        <option value="director">Director</option>
+        <option value="genre">Genre</option>
+    <input type="submit">
+  </select>
+  </form>
+</main>
+{% endblock %}

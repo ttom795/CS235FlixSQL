@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block content %}
+<main id="main">
+  <h2 id="nav-header">
+    {% if 'username' in session %}
+      Hello, {{ session['username'] }}
+    {% endif %}
+  </h2>
+  <h2>Welcome to CS235Flix!</h2>
+  <div style = "position: absolute; left: 50%; transform: translateX(-50%);">
+    <p>Random Movies: </p>
+    <div class="grid-container">
+    {% for article in selected_articles %}
+        <div class="grid-item">
+        <article id="article">
+            <h2 style="text-align:center; font-size: 0.5em;">{{article.title}}</h2>
+        <a href="{{url_for('news_bp.articles', article_input = article.id)}}">
+          {% set x = article.get_image() %}
+            <img alt="Image" src="{{x}}"></a>
+        </article>
+        </div>
+    {% endfor %}
+    </div>
+  </div>
+
+</main>
+{% endblock %}

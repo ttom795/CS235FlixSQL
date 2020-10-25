@@ -40,16 +40,14 @@ The *CS235Flix/.env* file contains variable settings. They are set with appropri
 
 ## Testing
 
-Testing requires that file *CS235Flix/tests/conftest.py* be edited to set the value of `TEST_DATA_PATH`. You should set this to the absolute path of the *CS235Flix/tests/data* directory. 
+**Testing the application**
 
-E.g. 
+From the CS235Flix directory, and within the activated virtual environment (see venv\Scripts\activate above):
 
-`TEST_DATA_PATH = os.path.join('C:', os.sep, 'Users', 'ian', 'Documents', 'Python dev', 'COVID-19', 'tests', 'data')`
+````shell
+$ python -m pytest
+```` 
 
-assigns TEST_DATA_PATH with the following value (the use of os.path.join and os.sep ensures use of the correct platform path separator):
-
-`C:\Users\ian\Documents\python-dev\COVID-19\tests\data`
-
-You can then run tests from within PyCharm.
-
+I've also included a nifty .bat file for starting the virtual environment, running the test program, and closing the virtual environment.
+Simply double click the .bat file to run the command (in Windows) and it'll execute the commands automatically.
  

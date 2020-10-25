@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block content %}
+<main id="main" style="width: 800px;">
+  <h2 style="position: relative; left: 100%; transform: translateX(-50%);">{{article.title}}, {{article.date}}</h2>
+  <img src={{article.get_image(300)}} style="position: absolute; left: 70px; top: 15%;">
+  <p style="position: relative; left: 50%; right: 20%;">{{article.first_para}}</p>
+  <p style="position: relative; left: 50%; right: 20%;">Director: {{article.director.director_full_name}}</p>
+    {% set x = [] %}
+    {% for i in article.actors %}
+    {{ x.append(i.actor) or "" }}
+    {% endfor %}
+  <p style="position: relative; left: 50%; right: 20%;">Actors: {{x|join(', ')}}</p>
+  <p style="position: relative; left: 50%; right: 20%;">Runtime: {{article.runtime}} minutes</p>
+  <p style="position: relative; left: 50%; right: 20%;">Rating: {{article.rating}}</p>
+  <a href="{{url_for('news_bp.comment_on_article', article = article.id)}}" style="position: relative; left: 50%; right: 20%;"><button>Review Film</button></a>
+  <p style="position: relative; left: 50%; right: 20%;">Films from similar genres:</p>
+
+  {% for tag in article.tags %}
+  {% if tag.tag_name in tag_urls %}
+  <button class="btn-general"  style="position: relative; left: 50%; right: 20%; top: 60%;"  onclick="location.href='{{ tag_urls[tag.tag_name] }}'">{{ tag.tag_name }}</button>
+  {% endif %}
+  {% endfor %}
+
+
+  <div style="position: relative; left: 100%; bottom: 200px; height:200px;width:400px;border:2px solid #FFFFFF;font:16px;overflow:auto; border-radius: 8px;">
+  <p>Reviews:</p>
+    {% for review in article.comments %}
+  <p style="padding:5px;">{{review.comment}} - rated {{review.rating}}/10 by {{review.user.username}}</p>
+  {% endfor %}
+  </div>
+</main>
+{% endblock %}

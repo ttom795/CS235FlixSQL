@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<main id="main">
+    <div>
+        <h2 style="position: absolute; left: 50%; transform: translateX(-50%);">{{article.title}}, {{article.date}}</h2>
+        <div class="form-wrapper" style="position: absolute; left: 15%; top: 25%;">
+            <form action="{{handler_url}}" method="post" style="width: 400px;">
+                {{form.article_id}} <!-- Need to include this hidden field as it tracks the article being commented. -->
+                {{form.csrf_token}} <!-- Need to include this token - Flask WTForms requires it. -->
+                <br>
+                <div class ="form-field" style="width: 200px;">{{form.comment.label}}
+                    </br>
+                    {{form.comment(size = 100, placeholder="type your review", class="textarea", cols="50", rows="6", wrap="hard")}}
+                    {{form.rating.label}}
+                    {{form.rating(size = 100, placeholder="enter your rating", class="textarea", cols="50", rows="6", wrap="hard")}}
+                    {% if form.comment.errors %}
+                        <ul class="errors">
+        	            {% for error in form.comment.errors %}
+        		            <li>{{error}}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                {{ form.submit }}
+            </form>
+        </div>
+    <div style="position: relative; left: 50%; top: 100px; height:200px;width:400px;border:2px solid #FFFFFF;font:16px;overflow:auto; border-radius: 8px;">
+    <p>Reviews:</p>
+    {% for review in article.comments %}
+    <p style="padding:5px;">{{review.comment_text}} - rated {{review.rating}}/10 by {{review.username}}</p>
+    {% endfor %}
+    </div>
+    </article>
+</main>
+{% endblock %}

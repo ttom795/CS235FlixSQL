@@ -1,0 +1,139 @@
+/*body*/
+body {
+margin: auto;
+padding: 0;
+font-family: "Verdana";
+color: #FFFFFF;
+background: #000000;
+}
+/*header_bar*/
+header {
+height: 55px;
+background: linear-gradient(-45deg, #D30000, #700000, #D30000);
+background-size: 200%, 200%;
+position: relative;
+animation: change 4s ease-in-out infinite;
+}
+@keyframes change{
+0%{background-position: 0 50%}
+50%{background-position: 100% 50%}
+100%{background-position: 0% 50%}
+}
+/*other_css_stuff*/
+header h1 {
+margin: 0;
+font-size: 1.7em;
+color: #FFFFFF;
+text-transform: uppercase;
+padding: 10px;
+float: left;
+}
+h2 {
+color: #FFFFFF;
+text-transform: uppercase;
+text-decoration: none;
+}
+center_things{
+position: absolute;
+left: 50%;
+transform: translate(-50%, 0);
+}
+form{
+width: 20vw;
+border-radius: 20px;
+background-color: rgba(70, 70, 70, 0.7);
+background-opacity: 50%;
+padding: 20px;
+}
+.errors{
+color: red;
+}
+.container {
+width: 100vw;
+margin: 0 auto;
+}
+.menu {
+float: right;
+margin-top: 20px;
+}
+.menu li {
+display: inline-block;
+margin-right: 10px;
+border-radius: 20px 20px 0px 0px;
+width: 125px;
+background: #000000;
+padding: 0.5em;
+text-align: center;
+}
+.menu li a {
+color: #FFFFFF;
+text-decoration: none;
+}
+input[type='text'], select {
+width: 100%;
+padding: 12px 20px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+input[type='password'], select {
+width: 100%;
+padding: 12px 20px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+input[type='submit'] {
+width: 100%;
+background: radial-gradient(#D30000, #700000, #500000);
+animation: zoom 3s ease-in-out infinite;
+background-position: center;
+color: white;
+padding: 14px 20px;
+margin: 8px 0;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+button{
+width: 90px;
+height: 30px;
+background: radial-gradient(#D30000, #700000, #500000);
+animation: zoom 3s ease-in-out infinite;
+background-position: center;
+color: white;
+margin: 8px 0;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+button.btn-general-disabled{
+width: 90px;
+height: 30px;
+background: radial-gradient(#CECECE, #6D6D6D, #4F4F4F);
+animation: zoom 3s ease-in-out infinite;
+background-position: center;
+color: black;
+margin: 8px 0;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+@keyframes zoom{
+0%{background-size: 100% 600%}
+50%{background-size: 200% 1200%}
+100%{background-size: 100% 600%}
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 10px 10px;
+  grid-template-columns: repeat(5, 185px);
+}
+.grid-item {
+  background-color: rgba(70, 70, 70, 0.7);
+}
