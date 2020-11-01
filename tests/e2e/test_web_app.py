@@ -15,12 +15,11 @@ def test_register(client):
     )
     assert response.headers['Location'] == 'http://localhost/authentication/login'
 
-
 @pytest.mark.parametrize(('username', 'password', 'message'), (
-        ('', '', b'Your username is required.'),
-        ('cj', '', b'Your username is too short.'),
-        ('test', '', b'Your password is required.'),
-        ('test', 'test', b'Your password must have at least 8 characters, an upper case letter, a lower case letter and a digit.'),
+        ('', '', b'Your username is required'),
+        ('cj', '', b'Your username is too short'),
+        ('test', '', b'Your password is required'),
+        ('test', 'test', b'Your password must be at least 8 characters, and contain an upper case letter, a lower case letter and a digit'),
         ('fmercury', 'Test#6^0', b'Your username is already taken - please supply another'),
 ))
 def test_register_with_invalid_input(client, username, password, message):
@@ -62,7 +61,7 @@ def test_index(client):
     # Check that we can retrieve the home page.
     response = client.get('/')
     assert response.status_code == 200
-    assert b'Welcome to CS235Flix!' in response.data
+    assert b'The COVID Pandemic of 2020' in response.data
 
 
 def test_login_required_to_comment(client):
@@ -79,15 +78,15 @@ def test_comment(client, auth):
 
     response = client.post(
         '/comment',
-        data={'comment': 'Who needs quarantine?', 'article_id': 2, 'rating': 1}
+        data={'comment': 'Who needs quarantine?', 'article_id': 2}
     )
-    assert response.headers['Location'] == 'http://localhost/movies/2'
+    assert response.headers['Location'] == 'http://localhost/articles_by_date?date=2020-02-29&view_comments_for=2'
 
 
 @pytest.mark.parametrize(('comment', 'messages'), (
-        ('Who thinks Trump is a fuckwit?', (b'Your review must not contain profanity')),
-        ('Hey', (b'Your review is too short')),
-        ('ass', (b'Your review is too short', b'Your review must not contain profanity')),
+        ('Who thinks Trump is a fuckwit?', (b'Your comment must not contain profanity')),
+        ('Hey', (b'Your comment is too short')),
+        ('ass', (b'Your comment is too short', b'Your comment must not contain profanity')),
 ))
 def test_comment_with_invalid_input(client, auth, comment, messages):
     # Login a user.
@@ -103,37 +102,42 @@ def test_comment_with_invalid_input(client, auth, comment, messages):
         assert message in response.data
 
 
-def test_articles_without_tag(client):
-    # Check that we can retrieve the movies page.
-    response = client.get('/movies_by_tag')
+def test_articles_without_date(client):
+    # Check that we can retrieve the articles page.
+    response = client.get('/articles_by_date')
     assert response.status_code == 200
 
-    # Check that without providing a date query parameter the page includes no movies.
-    assert b'No results' in response.data
+    # Check that without providing a date query parameter the page includes the first article.
+    assert b'Friday February 28 2020' in response.data
+    assert b'Coronavirus: First case of virus in New Zealand' in response.data
+
+
+def test_articles_with_date(client):
+    # Check that we can retrieve the articles page.
+    response = client.get('/articles_by_date?date=2020-02-29')
+    assert response.status_code == 200
+
+    # Check that all articles on the requested date are included on the page.
+    assert b'Saturday February 29 2020' in response.data
+    assert b'Covid 19 coronavirus: US deaths double in two days, Trump says quarantine not necessary' in response.data
+
 
 def test_articles_with_comment(client):
-    # Check that we can retrieve the movies page.
-    response = client.get('/movies/1')
+    # Check that we can retrieve the articles page.
+    response = client.get('/articles_by_date?date=2020-02-28&view_comments_for=1')
     assert response.status_code == 200
 
-    # Check that all comments for specified movies are included on the page.
+    # Check that all comments for specified article are included on the page.
+    assert b'Oh no, COVID-19 has hit New Zealand' in response.data
     assert b'Yeah Freddie, bad news' in response.data
 
 
 def test_articles_with_tag(client):
-    # Check that we can retrieve the movies page.
-    response = client.get('/movies_by_tag?tag=Action')
-    assert response.status_code == 200
-
-    # Check that all movies tagged with 'Action' are included on the page.
-    assert b'Guardians of the Galaxy' in response.data
-    assert b'Rogue One' in response.data
-    assert b'Colossal' in response.data
-
-def test_articles_with_invalid_tag(client):
     # Check that we can retrieve the articles page.
-    response = client.get('/movies_by_tag?tag=Macarena')
+    response = client.get('/articles_by_tag?tag=Health')
     assert response.status_code == 200
 
-    # Check that no movies are tagged with 'Macarena'.
-    assert b'No results' in response.data
+    # Check that all articles tagged with 'Health' are included on the page.
+    assert b'Articles tagged by Health' in response.data
+    assert b'Coronavirus: First case of virus in New Zealand' in response.data
+    assert b'Covid 19 coronavirus: US deaths double in two days, Trump says quarantine not necessary' in response.data

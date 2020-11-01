@@ -4,12 +4,8 @@
   <h2 style="position: relative; left: 100%; transform: translateX(-50%);">{{article.title}}, {{article.date}}</h2>
   <img src={{article.get_image(300)}} style="position: absolute; left: 70px; top: 15%;">
   <p style="position: relative; left: 50%; right: 20%;">{{article.first_para}}</p>
-  <p style="position: relative; left: 50%; right: 20%;">Director: {{article.director.director_full_name}}</p>
-    {% set x = [] %}
-    {% for i in article.actors %}
-    {{ x.append(i.actor) or "" }}
-    {% endfor %}
-  <p style="position: relative; left: 50%; right: 20%;">Actors: {{x|join(', ')}}</p>
+  <p style="position: relative; left: 50%; right: 20%;">Director: {{article.director}}</p>
+  <p style="position: relative; left: 50%; right: 20%;">Actors: {{article.actors}}</p>
   <p style="position: relative; left: 50%; right: 20%;">Runtime: {{article.runtime}} minutes</p>
   <p style="position: relative; left: 50%; right: 20%;">Rating: {{article.rating}}</p>
   <a href="{{url_for('news_bp.comment_on_article', article = article.id)}}" style="position: relative; left: 50%; right: 20%;"><button>Review Film</button></a>

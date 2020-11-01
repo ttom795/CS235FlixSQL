@@ -10,7 +10,7 @@
         <div class="grid-item">
         <article id="article">
             <h2 style="text-align:center; font-size: 0.5em;">{{article.title}}</h2>
-        <a href="{{url_for('news_bp.articles', article_input = article.id)}}">
+        <a href="{{url_for('news_bp.article_page', article_input = article.id)}}">
             <img alt="Image" src="{{article.image_link}}"></a>
         </article>
         </div>

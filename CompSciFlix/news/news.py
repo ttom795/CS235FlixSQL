@@ -9,6 +9,7 @@ from wtforms import TextAreaField, HiddenField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Length, ValidationError, NumberRange
 
 import CompSciFlix.adapters.repository as repo
+import CompSciFlix.adapters.database_repository as db
 import CompSciFlix.utilities.utilities as utilities
 import CompSciFlix.news.services as services
 
@@ -86,7 +87,7 @@ def movies_by_date():
     return redirect(url_for('home_bp.home'))
 
 @news_blueprint.route('/movies_by_title', methods=['GET'])
-def movies_by_title(title =""):
+def movies_by_title(title = ""):
     articles = services.get_articles_by_title(title, repo.repo_instance)
     return render_template(
         'news/articles.html',
@@ -101,7 +102,7 @@ def movies_by_title(title =""):
     )
 
 @news_blueprint.route('/movies_by_director', methods=['GET'])
-def movies_by_director(director =""):
+def movies_by_director(director = ""):
     articles = services.get_articles_by_director(director, repo.repo_instance)
     return render_template(
         'news/articles.html',
@@ -253,10 +254,9 @@ def comment_on_article():
     )
 
 @news_blueprint.route('/movies/<article_input>', methods=['GET'])
-def articles(article_input):
-    for item in repo.repo_instance._articles:
-        if item.id == int(article_input):
-            return render_template('news/article_page.html',article=item, tag_urls=utilities.get_tags_and_urls())
+def article_page(article_input):
+    item = repo.repo_instance.get_article(int(article_input))
+    return render_template('news/article_page.html',article=item, tag_urls=utilities.get_tags_and_urls())
 
 class ProfanityFree:
     def __init__(self, message=None):
