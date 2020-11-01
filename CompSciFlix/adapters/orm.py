@@ -1,5 +1,5 @@
 from sqlalchemy import (
-    Table, MetaData, Column, Integer, String, Date, DateTime,
+    Table, MetaData, Column, Integer, String, Date, DateTime, Float,
     ForeignKey
 )
 from sqlalchemy.orm import mapper, relationship

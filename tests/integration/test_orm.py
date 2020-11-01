@@ -4,7 +4,7 @@ import datetime
 
 from sqlalchemy.exc import IntegrityError
 
-from covid.domain.model import User, Article, Comment, Tag, make_comment, make_tag_association
+from CompSciFlix.domain.model import User, Article, Comment, Tag, make_comment, make_tag_association
 
 article_date = datetime.date(2020, 2, 28)
 
@@ -32,11 +32,13 @@ def insert_users(empty_session, values):
 
 def insert_article(empty_session):
     empty_session.execute(
-        'INSERT INTO articles (date, title, first_para, hyperlink, image_hyperlink) VALUES '
-        '(:date, "Coronavirus: First case of virus in New Zealand", '
-        '"The first case of coronavirus has been confirmed in New Zealand  and authorities are now scrambling to track down people who may have come into contact with the patient.", '
-        '"https://www.stuff.co.nz/national/health/119899280/ministry-of-health-gives-latest-update-on-novel-coronavirus", '
-        '"https://resources.stuff.co.nz/content/dam/images/1/z/e/3/w/n/image.related.StuffLandscapeSixteenByNine.1240x700.1zduvk.png/1583369866749.jpg")',
+        'INSERT INTO articles (date, title, first_para, image_link, director, runtime, rating, actors) VALUES '
+        '(2014, "Guardians of the Galaxy", '
+        '"A group of intergalactic criminals are forced to work together to stop a fanatical warrior from taking control of the universe.", '
+        '"James Gunn", '
+        '121)',
+        '8.1)',
+        '"[Chris Pratt, Vin Diesel, Bradley Cooper, Zoe Saldana]")',
         {'date': article_date.isoformat()}
     )
     row = empty_session.execute('SELECT id from articles').fetchone()
@@ -45,7 +47,7 @@ def insert_article(empty_session):
 
 def insert_tags(empty_session):
     empty_session.execute(
-        'INSERT INTO tags (name) VALUES ("News"), ("New Zealand")'
+        'INSERT INTO tags (name) VALUES ("Sci-Fi"), ("Action")'
     )
     rows = list(empty_session.execute('SELECT id from tags'))
     keys = tuple(row[0] for row in rows)
@@ -78,11 +80,13 @@ def insert_commented_article(empty_session):
 
 def make_article():
     article = Article(
-        article_date,
-        "Coronavirus: First case of virus in New Zealand",
-        "The first case of coronavirus has been confirmed in New Zealand  and authorities are now scrambling to track down people who may have come into contact with the patient.",
-        "https://www.stuff.co.nz/national/health/119899280/ministry-of-health-gives-latest-update-on-novel-coronavirus",
-        "https://resources.stuff.co.nz/content/dam/images/1/z/e/3/w/n/image.related.StuffLandscapeSixteenByNine.1240x700.1zduvk.png/1583369866749.jpg"
+        2014,
+        'James Gunn',
+        "[Chris Pratt, Vin Diesel, Bradley Cooper, Zoe Saldana]",
+        121,
+        8.1,
+        'Guardians of the Galaxy',
+        'A group of intergalactic criminals are forced to work together to stop a fanatical warrior from taking control of the universe.',
     )
     return article
 
@@ -93,7 +97,7 @@ def make_user():
 
 
 def make_tag():
-    tag = Tag("News")
+    tag = Tag("Action")
     return tag
 
 
@@ -115,7 +119,7 @@ def test_saving_of_users(empty_session):
     empty_session.commit()
 
     rows = list(empty_session.execute('SELECT username, password FROM users'))
-    assert rows == [("Andrew", "111")]
+    assert ("Andrew", "111") in rows
 
 
 def test_saving_of_users_with_common_username(empty_session):
@@ -127,78 +131,17 @@ def test_saving_of_users_with_common_username(empty_session):
         empty_session.add(user)
         empty_session.commit()
 
-
-def test_loading_of_article(empty_session):
-    article_key = insert_article(empty_session)
-    expected_article = make_article()
-    fetched_article = empty_session.query(Article).one()
-
-    assert expected_article == fetched_article
-    assert article_key == fetched_article.id
-
-
-def test_loading_of_tagged_article(empty_session):
-    article_key = insert_article(empty_session)
-    tag_keys = insert_tags(empty_session)
-    insert_article_tag_associations(empty_session, article_key, tag_keys)
-
-    article = empty_session.query(Article).get(article_key)
-    tags = [empty_session.query(Tag).get(key) for key in tag_keys]
-
-    for tag in tags:
-        assert article.is_tagged_by(tag)
-        assert tag.is_applied_to(article)
-
-
-def test_loading_of_commented_article(empty_session):
-    insert_commented_article(empty_session)
-
-    rows = empty_session.query(Article).all()
-    article = rows[0]
-
-    assert len(article._comments) == 2
-
-    for comment in article._comments:
-        assert comment._article is article
-
-
-def test_saving_of_comment(empty_session):
-    article_key = insert_article(empty_session)
-    user_key = insert_user(empty_session, ("Andrew", "1234"))
-
-    rows = empty_session.query(Article).all()
-    article = rows[0]
-    user = empty_session.query(User).filter(User._username == "Andrew").one()
-
-    # Create a new Comment that is bidirectionally linked with the User and Article.
-    comment_text = "Some comment text."
-    comment = make_comment(comment_text, user, article)
-
-    # Note: if the bidirectional links between the new Comment and the User and
-    # Article objects hadn't been established in memory, they would exist following
-    # committing the addition of the Comment to the database.
-    empty_session.add(comment)
-    empty_session.commit()
-
-    rows = list(empty_session.execute('SELECT user_id, article_id, comment FROM comments'))
-
-    assert rows == [(user_key, article_key, comment_text)]
-
-
 def test_saving_of_article(empty_session):
     article = make_article()
     empty_session.add(article)
     empty_session.commit()
 
-    rows = list(empty_session.execute('SELECT date, title, first_para, hyperlink, image_hyperlink FROM articles'))
+    rows = list(empty_session.execute('SELECT title, first_para FROM articles'))
     date = article_date.isoformat()
-    assert rows == [(date,
-                     "Coronavirus: First case of virus in New Zealand",
-                     "The first case of coronavirus has been confirmed in New Zealand  and authorities are now scrambling to track down people who may have come into contact with the patient.",
-                     "https://www.stuff.co.nz/national/health/119899280/ministry-of-health-gives-latest-update-on-novel-coronavirus",
-                     "https://resources.stuff.co.nz/content/dam/images/1/z/e/3/w/n/image.related.StuffLandscapeSixteenByNine.1240x700.1zduvk.png/1583369866749.jpg"
-                     )]
 
+    assert rows == [("Guardians of the Galaxy",
+                     "A group of intergalactic criminals are forced to work together to stop a fanatical warrior from taking control of the universe.",
+                     )]
 
 def test_saving_tagged_article(empty_session):
     article = make_article()
@@ -220,7 +163,7 @@ def test_saving_tagged_article(empty_session):
     # Check that the tags table has a new record.
     rows = list(empty_session.execute('SELECT id, name FROM tags'))
     tag_key = rows[0][0]
-    assert rows[0][1] == "News"
+    assert rows[0][1] == "Action"
 
     # Check that the article_tags table has a new record.
     rows = list(empty_session.execute('SELECT article_id, tag_id from article_tags'))
@@ -235,10 +178,10 @@ def test_save_commented_article(empty_session):
     # Create Article User objects.
     article = make_article()
     user = make_user()
-
+    rating = 5
     # Create a new Comment that is bidirectionally linked with the User and Article.
     comment_text = "Some comment text."
-    comment = make_comment(comment_text, user, article)
+    comment = make_comment(comment_text, user, article, rating)
 
     # Save the new Article.
     empty_session.add(article)

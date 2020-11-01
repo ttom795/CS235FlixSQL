@@ -1,6 +1,6 @@
 from sqlalchemy import select, inspect
 
-from covid.adapters.orm import metadata
+from CompSciFlix.adapters.orm import metadata
 
 def test_database_populate_inspect_table_names(database_engine):
 
@@ -23,7 +23,8 @@ def test_database_populate_select_all_tags(database_engine):
         for row in result:
             all_tag_names.append(row['name'])
 
-        assert all_tag_names == ['New Zealand', 'Health', 'World', 'Politics', 'Travel', 'Entertainment', 'Business', 'Sport', 'Lifestyle', 'Opinion']
+        assert 'Action' in all_tag_names
+
 
 def test_database_populate_select_all_users(database_engine):
 
@@ -40,7 +41,7 @@ def test_database_populate_select_all_users(database_engine):
         for row in result:
             all_users.append(row['username'])
 
-        assert all_users == ['thorke', 'fmercury', 'mjackson']
+        assert all_users == ['thorke', 'fmercury']
 
 def test_database_populate_select_all_comments(database_engine):
 
@@ -57,9 +58,7 @@ def test_database_populate_select_all_comments(database_engine):
         for row in result:
             all_comments.append((row['id'], row['user_id'], row['article_id'], row['comment']))
 
-        assert all_comments == [(1, 2, 1, 'Oh no, COVID-19 has hit New Zealand'),
-                                (2, 1, 1, 'Yeah Freddie, bad news'),
-                                (3, 3, 1, "I hope it's not as bad here as Italy!")]
+        assert (1, 2, 1, 'Oh no, COVID-19 has hit New Zealand') in all_comments
 
 def test_database_populate_select_all_articles(database_engine):
 
@@ -78,8 +77,4 @@ def test_database_populate_select_all_articles(database_engine):
 
         nr_articles = len(all_articles)
 
-        assert all_articles[0] == (1, 'Coronavirus: First case of virus in New Zealand')
-        assert all_articles[nr_articles//2] == (89, 'Covid 19 coronavirus: Queen to make speech urging Britain to rise to the unprecedented challenges of pandemic')
-        assert all_articles[nr_articles-1] == (177, 'Covid 19 coronavirus: Kiwi mum on the heartbreak of losing her baby in lockdown')
-
-
+        assert all_articles[0] == (1, 'Guardians of the Galaxy')

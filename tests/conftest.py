@@ -82,7 +82,7 @@ def client():
     my_app = create_app({
         'TESTING': True,                                # Set to True during testing.
         'REPOSITORY': 'database',                         # Set to 'memory' or 'database' depending on desired repository.
-        'TEST_DATA_PATH': TEST_DATA_PATH_MEMORY,        # Path for loading test data into the repository.
+        'TEST_DATA_PATH': TEST_DATA_PATH_DATABASE,        # Path for loading test data into the repository.
         'WTF_CSRF_ENABLED': False                       # test_client will not send a CSRF token, so disable validation.
     })
 
